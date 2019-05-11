@@ -22,9 +22,24 @@ public class Chord {
      */
     protected Note.NoteName root;
 
+    protected String type;
+
     /**
      * For performing note calculations
      */
-    private static final Guitar guitar = new Guitar();
+    private static final Guitar utilGuitar = new Guitar();
+
+    public Chord(Note.NoteName root, String type) {
+        this.type = type;
+        this.root = root;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public Note.NoteName getRoot() {
+        return this.root;
+    }
 
 }

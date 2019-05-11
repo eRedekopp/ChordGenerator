@@ -16,12 +16,12 @@ public class Note {
     /**
      * The string of the note: lowest string = 0, second-lowest = 1, ...
      */
-    private final int string;
+    public final int string;
 
     /**
      * The fret of the note: Open = 0, 1st fret = 1, ...
      */
-    private final int fret;
+    public final int fret;
 
     /**
      * Measured as an offset from the lowest note of the guitar

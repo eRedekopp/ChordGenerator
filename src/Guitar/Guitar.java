@@ -1,6 +1,7 @@
 package Guitar;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A class that contains information the setup of a particular guitar, and utilities for finding chords on it
@@ -24,6 +25,8 @@ public class Guitar {
      */
     private int highestPlayableFret;
 
+    private int maxFretSpan;
+
     private static int[] STANDARD_TUNING = {0, 5, 10, 15, 19, 24};
 
     /**
@@ -33,6 +36,7 @@ public class Guitar {
         this.tuning = STANDARD_TUNING;
         this.lowestNoteName = Note.NoteName.E;
         this.highestPlayableFret = 15;
+        this.maxFretSpan = 4;
     }
 
     /**
@@ -67,9 +71,9 @@ public class Guitar {
      * @return All playable chord voicings with the given notes
      */
     public ChordVoicing[] findChords(Chord chord) {
-        //TODO
-        // this.findNotes() ...
-        return null;
+
+        ChordBuilder chBuilder = new ChordBuilder(this, chord);
+        return chBuilder.allChords();
     }
 
     /**
@@ -90,6 +94,22 @@ public class Guitar {
     }
 
     /**
+     * Find all the notes of the given noteName on the given string
+     *
+     * @param noteName The name of the note to be searched
+     * @param string The string on which to find the note(s)
+     * @return An ArrayList of Notes representing all the notes of the given note name on the given string
+     */
+    public ArrayList<Note> findNotesByString(Note.NoteName noteName, int string) {
+        ArrayList<Note> outList = new ArrayList<>();
+        int lowestFret = this.findLowestFret(noteName, string);
+        outList.add(new Note(string, lowestFret, this));
+        if (lowestFret + 12 < this.highestPlayableFret)
+            outList.add(new Note(string, lowestFret+12, this));
+        return outList;
+    }
+
+    /**
      * Find the lowest pitch on the fretboard that corresponds to the given note name
      *
      * @param note The note for which to search
@@ -97,6 +117,10 @@ public class Guitar {
      */
     public int findLowestPitch(Note.NoteName note) {
         return this.findLowestFret(note, 0);
+    }
+
+    public int getMaxFretSpan() {
+        return maxFretSpan;
     }
 
     /**
@@ -167,4 +191,78 @@ public class Guitar {
     public int calcPitch(int string, int fret) {
         return this.tuning[string] + fret;
     }
+
+
+    /**
+     * A utility class to generate combinations of 2d lists of unknown size for generating chords
+     */
+    private class ChordBuilder {
+
+        int[] indices;      // current index of each ArrayList in notesByString. A cursor, sort of
+        int[] maxIndices;   // the length of each ArrayList in notesByString
+        Guitar guitar;      // the guitar on which to build the chord
+        Chord chord;        // the chord to be built
+        ArrayList<Note>[] notesByString; // each chord tone
+
+        public ChordBuilder(Guitar guitar, Chord chord) {
+
+            this.guitar = guitar;
+            this.indices = new int[guitar.numberOfStrings()];
+            this.maxIndices = new int[guitar.numberOfStrings()];
+            this.chord = chord;
+
+            this.notesByString = new ArrayList[this.guitar.numberOfStrings()];  // set up notesByString
+            for (int string = 0; string < this.guitar.numberOfStrings(); string++) {
+                this.notesByString[string] = new ArrayList<>();
+                for (Note.NoteName noteName : chord.allNotes)
+                    this.notesByString[string].addAll(this.guitar.findNotesByString(noteName, string));
+            }
+
+            // set up maxIndices
+            for (int i = 0; i < guitar.numberOfStrings(); i++) maxIndices[i] = this.notesByString[i].size();
+        }
+
+        /**
+         * @return All valid combinations of chords from notesByString
+         */
+        public ChordVoicing[] allChords() {
+            final int[] zeros = new int[indices.length]; // zero'd out array for comparison later
+            ArrayList<ChordVoicing> outList = new ArrayList<>();
+
+            do {
+                Note[] voicing = new Note[indices.length];
+                for (int string = 0; string < indices.length; string++) {
+                    try {
+                        voicing[string] = notesByString[string].get(indices[string]);
+                    } catch (IndexOutOfBoundsException e) {
+                        voicing[string] = null;
+                    }
+                }
+                ChordVoicing chVoicing= new ChordVoicing(this.chord.getType(), this.chord.getRoot(), voicing,
+                                                         this.guitar);
+                if (chVoicing.isValid()) outList.add(chVoicing);
+                incrementIndices();
+            } while (!Arrays.equals(this.indices, zeros)); // repeat until indices roll over
+
+            return (ChordVoicing[]) outList.toArray();
+        }
+
+        /**
+         * Go to the next index, wrap around to 0 if max index reached
+         */
+        private void incrementIndices() {
+            try {
+                for (int i = this.indices.length; i >= 0; i--) {
+                    this.indices[i]++;
+                    if (this.indices[i] > this.maxIndices[i]) {
+                        this.indices[i - 1]++;
+                        this.indices[i] = 0;
+                    } else return;
+                }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                Arrays.fill(indices, 0); // roll over when indices[0] reaches its max and tries to fetch indices[-1]
+            }
+        }
+    }
+
 }
