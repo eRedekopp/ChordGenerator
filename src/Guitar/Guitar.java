@@ -252,10 +252,10 @@ public class Guitar {
          */
         private void incrementIndices() {
             try {
-                for (int i = this.indices.length; i >= 0; i--) {
+                for (int i = this.indices.length; i >= 0; i--) { 
                     this.indices[i]++;
-                    if (this.indices[i] > this.maxIndices[i]) {
-                        this.indices[i - 1]++;
+                    if (this.indices[i] > this.maxIndices[i]) { // indices[i] == maxIndices[i] represents a muted string
+                        this.indices[i - 1]++;                  // (gets set to null in allChords)
                         this.indices[i] = 0;
                     } else return;
                 }

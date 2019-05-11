@@ -63,4 +63,51 @@ public class ChordVoicing extends Chord {
         return true;
     }
 
+    public int numberOfStrings() {
+        return this.guitar.numberOfStrings();
+    }
+
+    public String toString() {
+        int[] frets = this.getVoicingTab();
+        int minFret = min(frets), maxFret = max(frets);
+        StringBuilder[] stringBuilders = new StringBuilder[frets.length];
+        for (int i = 0; i < stringBuilders.length; i++) stringBuilders[i] = new StringBuilder();
+
+        // mark frets
+        for (int fret = minFret; fret <= maxFret; fret++) {
+            for (int string = 0; string < this.numberOfStrings(); string++) {
+                if (frets[string] == fret) stringBuilders[string].append("| X |");
+                else stringBuilders[string].append("|---|");
+            }
+        }
+        // append note name to end of line
+        for (int string = 0; string < this.numberOfStrings(); string++) {
+            StringBuilder builder = stringBuilders[string];
+            builder.append(' ');
+            if (frets[string] != -1)
+                builder.append(this.getChordDegree(this.guitar.calcNoteName(
+                               this.guitar.calcPitch(string, frets[string]))).toString());
+            else builder.append('X');
+            builder.append('\n');
+        }
+        // concat and return
+        for (int string = 1; string < this.numberOfStrings(); string++)
+            stringBuilders[0].append(stringBuilders[string].toString());
+        return stringBuilders[0].toString();
+    }
+
+    private static int min(int[] arr) {
+        if (arr.length == 0) throw new IllegalArgumentException("Cannot find smallest item in empty array");
+        int smallest = Integer.MAX_VALUE;
+        for (int i : arr) if (i < smallest && i != -1) smallest = i;
+        return smallest;
+    }
+
+    private static int max(int[] arr) {
+        if (arr.length == 0) throw new IllegalArgumentException("Cannot find largest item in empty array");
+        int largest = Integer.MIN_VALUE;
+        for (int i : arr) if (i > largest && i != -1) largest = i;
+        return largest;
+    }
+
 }
