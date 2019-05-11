@@ -14,6 +14,4 @@ public class CommandLineView {
     public void displayChordVoicing(ChordVoicing chordVoicing) {
         System.out.println(chordVoicing.toString());
     }
-
-
 }

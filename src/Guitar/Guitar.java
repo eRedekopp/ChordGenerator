@@ -25,6 +25,9 @@ public class Guitar {
      */
     private int highestPlayableFret;
 
+    /**
+     * The maximum number of frets that a chord on this guitar may span
+     */
     private int maxFretSpan;
 
     private static int[] STANDARD_TUNING = {0, 5, 10, 15, 19, 24};

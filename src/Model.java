@@ -11,8 +11,4 @@ public class Model {
     public Guitar getGuitar() {
         return guitar;
     }
-
-    public void setGuitar(Guitar guitar) {
-        this.guitar = guitar;
-    }
 }

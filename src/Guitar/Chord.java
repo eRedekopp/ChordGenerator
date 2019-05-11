@@ -10,6 +10,9 @@ public class Chord {
     public enum ChordDegree {ROOT, THIRD, FLAT_THIRD, FLAT_FIFTH, FIFTH, SHARP_FIFTH, FLAT_SEVENTH, SEVENTH,
                               FLAT_NINTH, NINTH, ELEVENTH, THIRTEENTH}
 
+
+
+    // TODO : populate these lists in the constructor
     /**
      * All notes contained within this chord
      */
