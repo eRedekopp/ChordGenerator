@@ -1,5 +1,8 @@
 package Guitar;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * A class that represents a guitar chord
  *
@@ -10,54 +13,85 @@ public class Chord {
     public enum ChordDegree {ROOT, THIRD, FLAT_THIRD, FLAT_FIFTH, FIFTH, SHARP_FIFTH, FLAT_SEVENTH, SEVENTH,
                               FLAT_NINTH, NINTH, ELEVENTH, THIRTEENTH}
 
-
-
-    // TODO : populate these lists in the constructor
     /**
-     * All notes contained within this chord
-     */
-    protected Note.NoteName[] allNotes;
-
-    /**
-     * Most important notes of the chord (must be present in all voicings)
+     * Mandatory notes in the chord (must be present in all voicings)
      */
     protected Note.NoteName[] bigNotes;
+
+    /**
+     * Non-mandatory notes in the chord
+     */
+    protected Note.NoteName[] otherNotes;
 
     /**
      * The root of the chord
      */
     protected Note.NoteName root;
 
-    protected String type;
-
     /**
      * For performing note calculations
      */
     private static final Guitar utilGuitar = new Guitar();
 
+    /**
+     * Generate a new chord given the root and the type
+     *
+     * @param root The root note of the chord
+     * @param type The type of the chord (see source code for options)
+     */
     public Chord(Note.NoteName root, String type) {
-        this.type = type;
+        this.root = root;
+        ArrayList<ChordDegree> otherDegreesList = new ArrayList<>(), bigDegreesList = new ArrayList<>();
+
+        switch (type) {
+            case "major triad":
+                bigDegreesList.addAll(Arrays.asList(ChordDegree.ROOT, ChordDegree.THIRD));
+                otherDegreesList.addAll(Arrays.asList(ChordDegree.FIFTH));
+                break;
+            case "minor triad":
+                bigDegreesList.addAll(Arrays.asList(ChordDegree.ROOT, ChordDegree.FLAT_THIRD));
+                otherDegreesList.addAll(Arrays.asList(ChordDegree.FIFTH));
+                break;
+            case "augmented triad":
+                bigDegreesList.addAll(Arrays.asList(ChordDegree.ROOT, ChordDegree.THIRD));
+                otherDegreesList.addAll(Arrays.asList(ChordDegree.SHARP_FIFTH));
+                break;
+            case "diminished triad":
+                bigDegreesList.addAll(Arrays.asList(ChordDegree.ROOT, ChordDegree.FLAT_THIRD));
+                otherDegreesList.addAll(Arrays.asList(ChordDegree.FLAT_FIFTH));
+                break;
+
+            default: throw new IllegalArgumentException("Unexpected chord type: " + type);
+        }
+
+
+    }
+
+    /**
+     * Generate a new chord given an array of all the notes in the chord, and an array of the most important notes
+     * (ie. ones the must be present in the chord for it to still be considered that chord)
+     *
+     * @param bigNotes The mandatory notes of the chord
+     * @param otherNotes Non-mandatory notes in the chord
+     */
+    public Chord(Note.NoteName root, Note.NoteName[] bigNotes, Note.NoteName[] otherNotes) {
+        this.otherNotes = otherNotes;
+        this.bigNotes = bigNotes;
         this.root = root;
     }
 
-    public String getType() {
-        return this.type;
-    }
 
     public Note.NoteName getRoot() {
         return this.root;
     }
 
     /**
-     * Return the chord degree of the given note in this chord
-     *
-     * @param note The note whose degree is to be determined
-     * @return The chord degree of the note
+     * @return the interval between the two given notes
      */
-    public ChordDegree getChordDegree(Note.NoteName note) {
-        int rootPitch = utilGuitar.findLowestPitch(this.root);
-        int notePitch = utilGuitar.findLowestPitch(note);
-        int pitchDiff = Math.abs(rootPitch - notePitch);
+    public static ChordDegree getInterval(Note.NoteName note1, Note.NoteName note2) {
+        int pitch1 = utilGuitar.findLowestPitch(note1);
+        int pitch2 = utilGuitar.findLowestPitch(note2);
+        int pitchDiff = Math.abs(pitch1 - pitch2);
 
         switch (pitchDiff) {
             case 0:
@@ -86,7 +120,67 @@ public class Chord {
                 return ChordDegree.SEVENTH;
             default:
                 throw new RuntimeException("Error: found difference between notes of " + pitchDiff + " - unable to " +
-                                           "parse");
+                        "parse");
         }
+    }
+
+    /**
+     * Return the chord degree of the given note in this chord
+     *
+     * @param note The note whose degree is to be determined
+     * @return The chord degree of the note
+     */
+    public ChordDegree getChordDegree(Note.NoteName note) {
+        return getInterval(this.root, note);
+    }
+
+    /**
+     * Return the note that is the given interval away from the given note
+     *
+     * @param note The starting note
+     * @param interval The interval between the given note and the returned note
+     * @return The note at the given interval from the starting note
+     */
+    public static Note.NoteName getNoteAtInterval(Note.NoteName note, ChordDegree interval) {
+        int intervalOffset;
+        switch (interval) {
+            case ROOT:
+                intervalOffset = 0;  break;
+            case FLAT_NINTH:
+                intervalOffset = 1;  break;
+            case NINTH:
+                intervalOffset = 2;  break;
+            case FLAT_THIRD:
+                intervalOffset = 3;  break;
+            case THIRD:
+                intervalOffset = 4;  break;
+            case ELEVENTH:
+                intervalOffset = 5;  break;
+            case FLAT_FIFTH:
+                intervalOffset = 6;  break;
+            case FIFTH:
+                intervalOffset = 7;  break;
+            case SHARP_FIFTH:
+                intervalOffset = 8;  break;
+            case THIRTEENTH:
+                intervalOffset = 9;  break;
+            case FLAT_SEVENTH:
+                intervalOffset = 10; break;
+            case SEVENTH:
+                intervalOffset = 11; break;
+            default:
+                throw new RuntimeException("Unknown Error");  // to satisfy the compiler
+        }
+        return utilGuitar.calcNoteName(utilGuitar.findLowestPitch(note) + intervalOffset);
+    }
+
+    /**
+     * Get the note at the given chord degree
+     *
+     * @param degree The chord degree of the returned note
+     * @return The note at the given chord degree
+     */
+    public Note.NoteName getNoteAtChordDegree(ChordDegree degree) {
+        return getNoteAtInterval(this.root, degree);
     }
 }
