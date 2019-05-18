@@ -46,21 +46,20 @@ public class Chord {
         switch (type) {
             case "major triad":
                 bigDegreesList.addAll(Arrays.asList(ChordDegree.ROOT, ChordDegree.THIRD));
-                otherDegreesList.addAll(Arrays.asList(ChordDegree.FIFTH));
+                otherDegreesList.add(ChordDegree.FIFTH);
                 break;
             case "minor triad":
                 bigDegreesList.addAll(Arrays.asList(ChordDegree.ROOT, ChordDegree.FLAT_THIRD));
-                otherDegreesList.addAll(Arrays.asList(ChordDegree.FIFTH));
+                otherDegreesList.add(ChordDegree.FIFTH);
                 break;
             case "augmented triad":
                 bigDegreesList.addAll(Arrays.asList(ChordDegree.ROOT, ChordDegree.THIRD));
-                otherDegreesList.addAll(Arrays.asList(ChordDegree.SHARP_FIFTH));
+                otherDegreesList.add(ChordDegree.SHARP_FIFTH);
                 break;
             case "diminished triad":
                 bigDegreesList.addAll(Arrays.asList(ChordDegree.ROOT, ChordDegree.FLAT_THIRD));
-                otherDegreesList.addAll(Arrays.asList(ChordDegree.FLAT_FIFTH));
+                otherDegreesList.add(ChordDegree.FLAT_FIFTH);
                 break;
-
             default: throw new IllegalArgumentException("Unexpected chord type: " + type);
         }
 
