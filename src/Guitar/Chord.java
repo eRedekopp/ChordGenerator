@@ -1,5 +1,6 @@
 package Guitar;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -33,6 +34,14 @@ public class Chord {
      */
     private static final Guitar utilGuitar = new Guitar();
 
+    public Note.NoteName[] getBigNotes() {
+        return bigNotes;
+    }
+
+    public Note.NoteName[] getOtherNotes() {
+        return otherNotes;
+    }
+
     /**
      * Generate a new chord given the root and the type
      *
@@ -63,7 +72,11 @@ public class Chord {
             default: throw new IllegalArgumentException("Unexpected chord type: " + type);
         }
 
-
+        ArrayList<Note.NoteName> bigNotesList = new ArrayList<>(), otherNotesList = new ArrayList<>();
+        for (ChordDegree degree : bigDegreesList)   bigNotesList.add(getNoteAtChordDegree(degree));
+        for (ChordDegree degree : otherDegreesList) otherNotesList.add(getNoteAtChordDegree(degree));
+        this.bigNotes   = (Note.NoteName[]) otherNotesList.toArray();
+        this.otherNotes = (Note.NoteName[]) bigNotesList.toArray();
     }
 
     /**
@@ -121,6 +134,16 @@ public class Chord {
                 throw new RuntimeException("Error: found difference between notes of " + pitchDiff + " - unable to " +
                         "parse");
         }
+    }
+
+    public Note.NoteName[] allNotes() {
+        int arrLength = bigNotes.length + otherNotes.length;
+        Note.NoteName[] allNotes = new Note.NoteName[arrLength];
+        System.arraycopy(bigNotes, 0, allNotes, 0, bigNotes.length);
+        System.arraycopy(otherNotes, 0, allNotes, bigNotes.length, otherNotes.length);
+        System.out.println("Debug message: bigNotes = " + bigNotes + " otherNotes = " + otherNotes +
+                           " allNotes = " + allNotes);
+        return allNotes;
     }
 
     /**

@@ -217,7 +217,7 @@ public class Guitar {
             this.notesByString = new ArrayList[this.guitar.numberOfStrings()];  // set up notesByString
             for (int string = 0; string < this.guitar.numberOfStrings(); string++) {
                 this.notesByString[string] = new ArrayList<>();
-                for (Note.NoteName noteName : chord.allNotes)
+                for (Note.NoteName noteName : chord.allNotes())
                     this.notesByString[string].addAll(this.guitar.findNotesByString(noteName, string));
             }
 
@@ -241,8 +241,8 @@ public class Guitar {
                         voicing[string] = null;
                     }
                 }
-                ChordVoicing chVoicing= new ChordVoicing(this.chord.getType(), this.chord.getRoot(), voicing,
-                                                         this.guitar);
+                ChordVoicing chVoicing= new ChordVoicing(this.chord.getRoot(), this.chord.getBigNotes(),
+                                                         this.chord.getOtherNotes(), voicing, this.guitar);
                 if (chVoicing.isValid()) outList.add(chVoicing);
                 incrementIndices();
             } while (!Arrays.equals(this.indices, zeros)); // repeat until indices roll over

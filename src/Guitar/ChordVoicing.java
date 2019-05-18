@@ -1,8 +1,6 @@
 package Guitar;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * A class that represents a specific voicing of a chord
@@ -25,11 +23,19 @@ public class ChordVoicing extends Chord {
         this.guitar = guitar;
     }
 
+    public ChordVoicing(Note.NoteName root, Note.NoteName[] bigNotes, Note.NoteName[] otherNotes, Note[] voicing,
+                        Guitar guitar) {
+        super(root, bigNotes, otherNotes);
+        this.voicing = voicing;
+        this.guitar = guitar;
+    }
+
     /**
      * @return True if the fret span of the chord is within the limit of this.guitar and the chord contains all of
      * this.bigNotes, else return false
      */
     public boolean isValid() {
+        List<Note.NoteName> allChordNotes = Arrays.asList(this.allNotes());
         HashSet<Note.NoteName> noteNames = new HashSet<>();
         for (int string = 0; string < voicing.length; string++) {
             Note note = voicing[string];
@@ -39,6 +45,7 @@ public class ChordVoicing extends Chord {
         for (Note note : voicing) if (note != null) frets.add(note.fret);
         if (Collections.max(frets) - Collections.min(frets) + 1 > this.guitar.getMaxFretSpan()) return false;
         for (Note.NoteName noteName : this.bigNotes) if (!noteNames.contains(noteName)) return false;
+        for (Note.NoteName noteName : noteNames) if (!allChordNotes.contains(noteName)) return false;
         return true;
     }
 
