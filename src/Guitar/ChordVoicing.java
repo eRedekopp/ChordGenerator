@@ -31,8 +31,8 @@ public class ChordVoicing extends Chord {
     }
 
     /**
-     * @return True if the fret span of the chord is within the limit of this.guitar and the chord contains all of
-     * this.bigNotes, else return false
+     * @return True if the fret span of the chord is within the limit of this.guitar, the chord contains all of
+     * this.bigNotes, and the chord doesn't contain any invalid notes, else return false
      */
     public boolean isValid() {
         List<Note.NoteName> allChordNotes = Arrays.asList(this.allNotes());
@@ -42,7 +42,7 @@ public class ChordVoicing extends Chord {
             if (note != null) noteNames.add(note.noteName);
         }
         ArrayList<Integer> frets = new ArrayList<>();
-        for (Note note : voicing) if (note != null) frets.add(note.fret);
+        for (Note note : voicing) if (note != null && note.fret != 0) frets.add(note.fret);
         if (Collections.max(frets) - Collections.min(frets) + 1 > this.guitar.getMaxFretSpan()) return false;
         for (Note.NoteName noteName : this.bigNotes) if (!noteNames.contains(noteName)) return false;
         for (Note.NoteName noteName : noteNames) if (!allChordNotes.contains(noteName)) return false;
@@ -75,31 +75,57 @@ public class ChordVoicing extends Chord {
     }
 
     public String toString() {
+        // todo: displays chord chart sideways and chord degrees are incorrect
         int[] frets = this.getVoicingTab();
-        int minFret = min(frets), maxFret = max(frets);
+        int minFret = min(frets), maxFret = max(frets), minFretDisplayed = minFret - 2, maxFretDisplayed = maxFret + 2;
+        // use a stringbuilder for each line of output
         StringBuilder[] stringBuilders = new StringBuilder[frets.length];
+        // keep track of open strings
+        ArrayList<Integer> openStrings = new ArrayList<>();
+        for (int string = 0; string < this.numberOfStrings(); string++) if (frets[string] == 0) openStrings.add(string);
         for (int i = 0; i < stringBuilders.length; i++) stringBuilders[i] = new StringBuilder();
 
+        // make first vertical line
+        for (int string = 0; string < this.numberOfStrings(); string++) stringBuilders[string].append('|');
         // mark frets
-        for (int fret = minFret; fret <= maxFret; fret++) {
+        for (int fret = minFretDisplayed; fret <= maxFretDisplayed; fret++) {
+            if (fret <= 0) continue;
             for (int string = 0; string < this.numberOfStrings(); string++) {
-                if (frets[string] == fret) stringBuilders[string].append("| X |");
-                else stringBuilders[string].append("|---|");
+                if (openStrings.contains(string)) stringBuilders[string].append("~~~|");
+                else if (frets[string] == fret) {
+                    stringBuilders[string].append("-X-|");
+                }
+                else stringBuilders[string].append("---|");
             }
         }
         // append note name to end of line
         for (int string = 0; string < this.numberOfStrings(); string++) {
             StringBuilder builder = stringBuilders[string];
             builder.append(' ');
-            if (frets[string] != -1)
+            if (frets[string] != -1) {
                 builder.append(this.getChordDegree(this.guitar.calcNoteName(
-                               this.guitar.calcPitch(string, frets[string]))).toString());
+                        this.guitar.calcPitch(string, frets[string]))).toString());
+                System.out.println(this.guitar.calcPitch(string, frets[string]));
+            }
             else builder.append('X');
             builder.append('\n');
         }
+        // add fret numbers
+        StringBuilder fretNumberBuilder = new StringBuilder();
+        if (minFretDisplayed <= 0) minFretDisplayed = 1;
+        for (int fret = minFretDisplayed; fret < maxFretDisplayed; fret++) {
+            if (fret % 2 == 0) fretNumberBuilder.append("    "); // 4 blank spaces
+            else {
+                fretNumberBuilder.append("  "); // centre fret number on fret
+                fretNumberBuilder.append(fret);
+                fretNumberBuilder.append(' ');
+            }
+        }
+
         // concat and return
         for (int string = 1; string < this.numberOfStrings(); string++)
-            stringBuilders[0].append(stringBuilders[string].toString());
+            stringBuilders[0].append(stringBuilders[string].toString()); // append all to stringbuilders[0]
+        stringBuilders[0].append(fretNumberBuilder.toString());
         return stringBuilders[0].toString();
     }
 

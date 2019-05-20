@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class Guitar {
 
     /**
-     * The lowest note on the guitar
+     * The name of the lowest note on the guitar
      */
     private Note.NoteName lowestNoteName;
 
@@ -180,7 +180,7 @@ public class Guitar {
             case 9:  return Note.NoteName.F_SHARP;
             case 10: return Note.NoteName.G;
             case 11: return Note.NoteName.G_SHARP;
-            default: return null;
+            default: throw new RuntimeException("Found unexpected result of pitch: " + pitch);
         }
     }
 
