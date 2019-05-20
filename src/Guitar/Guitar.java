@@ -151,37 +151,8 @@ public class Guitar {
      * @return The name of the note represented by the pitch
      */
     public Note.NoteName calcNoteName(int pitch) {
-        // Calculate based on lowestNoteName of A; modulate accordingly
-        switch (this.lowestNoteName) {
-            case A:                   break;
-            case A_SHARP: pitch -= 1; break;
-            case B:       pitch -= 2; break;
-            case C:       pitch -= 3; break;
-            case C_SHARP: pitch -= 4; break;
-            case D:       pitch -= 5; break;
-            case D_SHARP: pitch =- 6; break;
-            case E:       pitch += 5; break;
-            case F:       pitch += 4; break;
-            case F_SHARP: pitch += 3; break;
-            case G:       pitch += 2; break;
-            case G_SHARP: pitch += 1; break;
-        }
-        while (pitch < 0) pitch += 12;
-        switch (pitch % 12) {
-            case 0:  return Note.NoteName.A;
-            case 1:  return Note.NoteName.A_SHARP;
-            case 2:  return Note.NoteName.B;
-            case 3:  return Note.NoteName.C;
-            case 4:  return Note.NoteName.C_SHARP;
-            case 5:  return Note.NoteName.D;
-            case 6:  return Note.NoteName.D_SHARP;
-            case 7:  return Note.NoteName.E;
-            case 8:  return Note.NoteName.F;
-            case 9:  return Note.NoteName.F_SHARP;
-            case 10: return Note.NoteName.G;
-            case 11: return Note.NoteName.G_SHARP;
-            default: throw new RuntimeException("Found unexpected result of pitch: " + pitch);
-        }
+        ChordVoicing.ChordDegree interval = Chord.getIntervalFromPitchDiff(pitch);
+        return Chord.getNoteAtInterval(this.lowestNoteName, interval);
     }
 
     /**

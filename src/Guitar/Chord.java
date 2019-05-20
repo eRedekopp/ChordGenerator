@@ -205,4 +205,22 @@ public class Chord {
     public Note.NoteName getNoteAtChordDegree(ChordDegree degree) {
         return getNoteAtInterval(this.root, degree);
     }
+
+    public static ChordDegree getIntervalFromPitchDiff(int pitchDiff) {
+        switch (pitchDiff % 12) {
+            case 0: return ChordDegree.ROOT;
+            case 1: return ChordDegree.FLAT_NINTH;
+            case 2: return ChordDegree.NINTH;
+            case 3: return ChordDegree.FLAT_THIRD;
+            case 4: return ChordDegree.THIRD;
+            case 5: return ChordDegree.ELEVENTH;
+            case 6: return ChordDegree.FLAT_FIFTH;
+            case 7: return ChordDegree.FIFTH;
+            case 8: return ChordDegree.SHARP_FIFTH;
+            case 9: return ChordDegree.THIRTEENTH;
+            case 10: return ChordDegree.FLAT_SEVENTH;
+            case 11: return ChordDegree.SEVENTH;
+            default: throw new RuntimeException("Error: found pitch difference: " + pitchDiff % 12);
+        }
+    }
 }
