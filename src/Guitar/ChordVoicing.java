@@ -17,13 +17,13 @@ public class ChordVoicing extends Chord {
      */
     private Guitar guitar;
 
-    public ChordVoicing(String type, Note.NoteName root, Note[] voicing, Guitar guitar) {
+    public ChordVoicing(String type, NoteName root, Note[] voicing, Guitar guitar) {
         super(root, type);
         this.voicing = voicing;
         this.guitar = guitar;
     }
 
-    public ChordVoicing(Note.NoteName root, Note.NoteName[] bigNotes, Note.NoteName[] otherNotes, Note[] voicing,
+    public ChordVoicing(NoteName root, NoteName[] bigNotes, NoteName[] otherNotes, Note[] voicing,
                         Guitar guitar) {
         super(root, bigNotes, otherNotes);
         this.voicing = voicing;
@@ -35,8 +35,8 @@ public class ChordVoicing extends Chord {
      * this.bigNotes, and the chord doesn't contain any invalid notes, else return false
      */
     public boolean isValid() {
-        List<Note.NoteName> allChordNotes = Arrays.asList(this.allNotes());
-        HashSet<Note.NoteName> noteNames = new HashSet<>();
+        List<NoteName> allChordNotes = Arrays.asList(this.allNotes());
+        HashSet<NoteName> noteNames = new HashSet<>();
         for (int string = 0; string < voicing.length; string++) {
             Note note = voicing[string];
             if (note != null) noteNames.add(note.noteName);
@@ -45,8 +45,8 @@ public class ChordVoicing extends Chord {
         for (Note note : voicing) if (note != null && note.fret != 0) frets.add(note.fret);
         if (frets.size() != 0
             && Collections.max(frets) - Collections.min(frets) + 1 > this.guitar.getMaxFretSpan()) return false;
-        for (Note.NoteName noteName : this.bigNotes) if (!noteNames.contains(noteName)) return false;
-        for (Note.NoteName noteName : noteNames) if (!allChordNotes.contains(noteName)) return false;
+        for (NoteName noteName : this.bigNotes) if (!noteNames.contains(noteName)) return false;
+        for (NoteName noteName : noteNames) if (!allChordNotes.contains(noteName)) return false;
         return true;
     }
 

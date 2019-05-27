@@ -14,7 +14,7 @@ public class Guitar {
     /**
      * The name of the lowest note on the guitar
      */
-    private Note.NoteName lowestNoteName;
+    private NoteName lowestNoteName;
 
     /**
      * Each string's pitch as an offset from the lowest note (eg. tuning[0] = 0 and represents the lowest string)
@@ -38,7 +38,7 @@ public class Guitar {
      */
     public Guitar() {
         this.tuning = STANDARD_TUNING;
-        this.lowestNoteName = Note.NoteName.E;
+        this.lowestNoteName = NoteName.E;
         this.highestPlayableFret = 15;
         this.maxFretSpan = 4;
     }
@@ -56,7 +56,7 @@ public class Guitar {
      * @param noteName The name of the note to be searched
      * @return All the notes on the fretboard of the given name
      */
-    public Note[] findNotes(Note.NoteName noteName) {
+    public Note[] findNotes(NoteName noteName) {
         ArrayList<Note> foundNotes = new ArrayList<>();
         for (int string = 0; string < this.numberOfStrings(); string++) {
             int curFret = this.findLowestFret(noteName, string);
@@ -91,7 +91,7 @@ public class Guitar {
      * @param note The note for which to search
      * @return All pitches on the fretboard with the given name, represented as an offset from the lowest note
      */
-    public Integer[] findPitches(Note.NoteName note) {
+    public Integer[] findPitches(NoteName note) {
         int maxPitch = this.tuning[this.numberOfStrings()-1] + this.highestPlayableFret;
         int curPitch = this.findLowestPitch(note);
         ArrayList<Integer> pitches = new ArrayList<>();
@@ -109,7 +109,7 @@ public class Guitar {
      * @param string The string on which to find the note(s)
      * @return An ArrayList of Notes representing all the notes of the given note name on the given string
      */
-    public ArrayList<Note> findNotesByString(Note.NoteName noteName, int string) {
+    public ArrayList<Note> findNotesByString(NoteName noteName, int string) {
         ArrayList<Note> outList = new ArrayList<>();
         int lowestFret = this.findLowestFret(noteName, string);
         outList.add(new Note(string, lowestFret, this));
@@ -124,7 +124,7 @@ public class Guitar {
      * @param note The note for which to search
      * @return The lowest pitch on the fretboard with the given name, represented as an offset from the lowest note
      */
-    public int findLowestPitch(Note.NoteName note) {
+    public int findLowestPitch(NoteName note) {
         for (int i = 0; i < 12; i++) if (this.calcNoteName(i) == note) return i;
         throw new RuntimeException("Unknown error"); // shouldn't happen
     }
@@ -140,22 +140,13 @@ public class Guitar {
      * @param string The string number as an offset from the lowest string (eg. lowest string is 0)
      * @return The lowest fret number corresponding to the given note on the string
      */
-    public int findLowestFret(Note.NoteName note, int string) {
+    public int findLowestFret(NoteName note, int string) {
 
-        Chord.ChordDegree stringIntervalFromLowest = Chord.getIntervalFromPitchDiff(this.tuning[string]);
-        Note.NoteName stringNoteName = Chord.getNoteAtInterval(this.lowestNoteName, stringIntervalFromLowest);
-        Chord.ChordDegree noteInterval = Chord.getInterval(stringNoteName, note);
+        ChordDegree stringIntervalFromLowest = Chord.getIntervalFromPitchDiff(this.tuning[string]);
+        NoteName stringNoteName = Chord.getNoteAtInterval(this.lowestNoteName, stringIntervalFromLowest);
+        ChordDegree noteInterval = Chord.getInterval(stringNoteName, note);
 
         return Chord.getPitchDiffFromInterval(noteInterval);
-
-//        int currentFret = 0;
-//        Note.NoteName currentNote = this.calcNoteName(this.tuning[string]);
-//        while (currentNote != note) {
-//            currentFret++;
-//            currentNote = this.calcNoteName(this.tuning[string] + currentFret);
-//        }
-//        if (currentFret > highestPlayableFret) throw new FretOutOfBoundsException();
-//        return currentFret;
     }
 
     /**
@@ -164,22 +155,22 @@ public class Guitar {
      * @param pitch The pitch as an offset from the lowest note
      * @return The name of the note represented by the pitch
      */
-    public Note.NoteName calcNoteName(int pitch) {
-        if (this.lowestNoteName != Note.NoteName.E)
+    public NoteName calcNoteName(int pitch) {
+        if (this.lowestNoteName != NoteName.E)
             throw new RuntimeException("Non-standard tunings not yet supported");
         switch (pitch % 12) {
-            case 0:  return Note.NoteName.E;
-            case 1:  return Note.NoteName.F;
-            case 2:  return Note.NoteName.F_SHARP;
-            case 3:  return Note.NoteName.G;
-            case 4:  return Note.NoteName.G_SHARP;
-            case 5:  return Note.NoteName.A;
-            case 6:  return Note.NoteName.A_SHARP;
-            case 7:  return Note.NoteName.B;
-            case 8:  return Note.NoteName.C;
-            case 9:  return Note.NoteName.C_SHARP;
-            case 10: return Note.NoteName.D;
-            case 11: return Note.NoteName.D_SHARP;
+            case 0:  return NoteName.E;
+            case 1:  return NoteName.F;
+            case 2:  return NoteName.F_SHARP;
+            case 3:  return NoteName.G;
+            case 4:  return NoteName.G_SHARP;
+            case 5:  return NoteName.A;
+            case 6:  return NoteName.A_SHARP;
+            case 7:  return NoteName.B;
+            case 8:  return NoteName.C;
+            case 9:  return NoteName.C_SHARP;
+            case 10: return NoteName.D;
+            case 11: return NoteName.D_SHARP;
             default: throw new RuntimeException("Unknown error"); // to satisfy the compiler
         }
     }
@@ -217,7 +208,7 @@ public class Guitar {
             this.notesByString = new ArrayList[this.guitar.numberOfStrings()];  // set up notesByString
             for (int string = 0; string < this.guitar.numberOfStrings(); string++) {
                 this.notesByString[string] = new ArrayList<>();
-                for (Note.NoteName noteName : chord.allNotes())
+                for (NoteName noteName : chord.allNotes())
                     this.notesByString[string].addAll(this.guitar.findNotesByString(noteName, string));
             }
 
@@ -229,8 +220,8 @@ public class Guitar {
          * @return All valid combinations of chords from notesByString
          */
         public List<ChordVoicing> allChords() {
-            // brute force: just check every possible combination
-            // todo: test the fuck out of this 
+            // brute force: just check every possible combination of notes in notesByString and add it to the list if
+            // it's valid
             final int[] zeros = new int[indices.length]; // zero'd out array for comparison later
             ArrayList<ChordVoicing> outList = new ArrayList<>();
 

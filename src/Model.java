@@ -8,7 +8,8 @@ public class Model {
         guitar = new Guitar();
     }
 
-    public Guitar getGuitar() {
-        return guitar;
+    public ChordVoicing[] getAllChordVoicings(Chord chord) {
+        return guitar.findChords(chord);
     }
+
 }

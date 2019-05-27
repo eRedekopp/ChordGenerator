@@ -9,11 +9,6 @@ package Guitar;
 public class Note {
 
     /**
-     * All note names
-     */
-    public enum NoteName {A, A_SHARP, B, C, C_SHARP, D, D_SHARP, E, F, F_SHARP, G, G_SHARP}
-
-    /**
      * The string of the note: lowest string = 0, second-lowest = 1, ...
      */
     public final int string;

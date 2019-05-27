@@ -10,34 +10,31 @@ import java.util.Arrays;
  */
 public class Chord {
 
-    public enum ChordDegree {ROOT, THIRD, FLAT_THIRD, FLAT_FIFTH, FIFTH, SHARP_FIFTH, FLAT_SEVENTH, SEVENTH,
-                              FLAT_NINTH, NINTH, ELEVENTH, THIRTEENTH}
-
     /**
      * Mandatory notes in the chord (must be present in all voicings)
      */
-    protected Note.NoteName[] bigNotes;
+    protected NoteName[] bigNotes;
 
     /**
      * Non-mandatory notes in the chord
      */
-    protected Note.NoteName[] otherNotes;
+    protected NoteName[] otherNotes;
 
     /**
      * The root of the chord
      */
-    protected Note.NoteName root;
+    protected NoteName root;
 
     /**
      * For performing note calculations
      */
     private static final Guitar utilGuitar = new Guitar();
 
-    public Note.NoteName[] getBigNotes() {
+    public NoteName[] getBigNotes() {
         return bigNotes;
     }
 
-    public Note.NoteName[] getOtherNotes() {
+    public NoteName[] getOtherNotes() {
         return otherNotes;
     }
 
@@ -47,7 +44,7 @@ public class Chord {
      * @param root The root note of the chord
      * @param type The type of the chord (see source code for options)
      */
-    public Chord(Note.NoteName root, String type) {
+    public Chord(NoteName root, String type) {
         this.root = root;
         ArrayList<ChordDegree> otherDegreesList = new ArrayList<>(), bigDegreesList = new ArrayList<>();
 
@@ -71,11 +68,11 @@ public class Chord {
             default: throw new IllegalArgumentException("Unexpected chord type: " + type);
         }
 
-        ArrayList<Note.NoteName> bigNotesList = new ArrayList<>(), otherNotesList = new ArrayList<>();
+        ArrayList<NoteName> bigNotesList = new ArrayList<>(), otherNotesList = new ArrayList<>();
         for (ChordDegree degree : bigDegreesList)   bigNotesList.add(getNoteAtChordDegree(degree));
         for (ChordDegree degree : otherDegreesList) otherNotesList.add(getNoteAtChordDegree(degree));
-        this.bigNotes   = (Note.NoteName[]) otherNotesList.toArray();
-        this.otherNotes = (Note.NoteName[]) bigNotesList.toArray();
+        this.bigNotes   = (NoteName[]) otherNotesList.toArray();
+        this.otherNotes = (NoteName[]) bigNotesList.toArray();
     }
 
     /**
@@ -85,21 +82,21 @@ public class Chord {
      * @param bigNotes The mandatory notes of the chord
      * @param otherNotes Non-mandatory notes in the chord
      */
-    public Chord(Note.NoteName root, Note.NoteName[] bigNotes, Note.NoteName[] otherNotes) {
+    public Chord(NoteName root, NoteName[] bigNotes, NoteName[] otherNotes) {
         this.otherNotes = otherNotes;
         this.bigNotes = bigNotes;
         this.root = root;
     }
 
 
-    public Note.NoteName getRoot() {
+    public NoteName getRoot() {
         return this.root;
     }
 
     /**
      * @return the interval between the two given notes
      */
-    public static ChordDegree getInterval(Note.NoteName note1, Note.NoteName note2) {
+    public static ChordDegree getInterval(NoteName note1, NoteName note2) {
         int pitch1 = utilGuitar.findLowestPitch(note1);
         int pitch2 = utilGuitar.findLowestPitch(note2);
         int pitchDiff = pitch2 - pitch1;
@@ -137,9 +134,9 @@ public class Chord {
         }
     }
 
-    public Note.NoteName[] allNotes() {
+    public NoteName[] allNotes() {
         int arrLength = bigNotes.length + otherNotes.length;
-        Note.NoteName[] allNotes = new Note.NoteName[arrLength];
+        NoteName[] allNotes = new NoteName[arrLength];
         System.arraycopy(bigNotes, 0, allNotes, 0, bigNotes.length);
         System.arraycopy(otherNotes, 0, allNotes, bigNotes.length, otherNotes.length);
         return allNotes;
@@ -151,7 +148,7 @@ public class Chord {
      * @param note The note whose degree is to be determined
      * @return The chord degree of the note
      */
-    public ChordDegree getChordDegree(Note.NoteName note) {
+    public ChordDegree getChordDegree(NoteName note) {
         return getInterval(this.root, note);
     }
 
@@ -162,7 +159,7 @@ public class Chord {
      * @param interval The interval between the given note and the returned note
      * @return The note at the given interval from the starting note
      */
-    public static Note.NoteName getNoteAtInterval(Note.NoteName note, ChordDegree interval) {
+    public static NoteName getNoteAtInterval(NoteName note, ChordDegree interval) {
         int intervalOffset;
         switch (interval) {
             case ROOT:
@@ -201,7 +198,7 @@ public class Chord {
      * @param degree The chord degree of the returned note
      * @return The note at the given chord degree
      */
-    public Note.NoteName getNoteAtChordDegree(ChordDegree degree) {
+    public NoteName getNoteAtChordDegree(ChordDegree degree) {
         return getNoteAtInterval(this.root, degree);
     }
 
@@ -253,19 +250,19 @@ public class Chord {
 
         // testing getInterval
 
-        Note.NoteName[] getIntervalInputs = {
-                Note.NoteName.A, Note.NoteName.A,               // Unison
-                Note.NoteName.C, Note.NoteName.C_SHARP,         // min2
-                Note.NoteName.F_SHARP, Note.NoteName.G_SHARP,   // maj2
-                Note.NoteName.A_SHARP, Note.NoteName.C_SHARP,   // min3
-                Note.NoteName.E, Note.NoteName.G_SHARP,         // maj3
-                Note.NoteName.D, Note.NoteName.G,               // per4
-                Note.NoteName.B, Note.NoteName.F,               // TT
-                Note.NoteName.D_SHARP, Note.NoteName.A_SHARP,   // per5
-                Note.NoteName.G_SHARP, Note.NoteName.E,         // min6
-                Note.NoteName.A, Note.NoteName.F_SHARP,         // maj6
-                Note.NoteName.F, Note.NoteName.D_SHARP,         // min7
-                Note.NoteName.F_SHARP, Note.NoteName.F          // maj7
+        NoteName[] getIntervalInputs = {
+                NoteName.A, NoteName.A,               // Unison
+                NoteName.C, NoteName.C_SHARP,         // min2
+                NoteName.F_SHARP, NoteName.G_SHARP,   // maj2
+                NoteName.A_SHARP, NoteName.C_SHARP,   // min3
+                NoteName.E, NoteName.G_SHARP,         // maj3
+                NoteName.D, NoteName.G,               // per4
+                NoteName.B, NoteName.F,               // TT
+                NoteName.D_SHARP, NoteName.A_SHARP,   // per5
+                NoteName.G_SHARP, NoteName.E,         // min6
+                NoteName.A, NoteName.F_SHARP,         // maj6
+                NoteName.F, NoteName.D_SHARP,         // min7
+                NoteName.F_SHARP, NoteName.F          // maj7
         };
         ChordDegree[] getIntervalExpected = {
                 ChordDegree.ROOT,
@@ -294,10 +291,10 @@ public class Chord {
 
         // testing allNotes
 
-        Note.NoteName[] allNotesInputsBig = {Note.NoteName.E, Note.NoteName.G_SHARP};
-        Note.NoteName[] allNotesInputsOther = {Note.NoteName.B};
-        Note.NoteName[] allNotesExpected = {Note.NoteName.E, Note.NoteName.G_SHARP, Note.NoteName.B};
-        Chord c = new Chord(Note.NoteName.E, allNotesInputsBig, allNotesInputsOther);
+        NoteName[] allNotesInputsBig = {NoteName.E, NoteName.G_SHARP};
+        NoteName[] allNotesInputsOther = {NoteName.B};
+        NoteName[] allNotesExpected = {NoteName.E, NoteName.G_SHARP, NoteName.B};
+        Chord c = new Chord(NoteName.E, allNotesInputsBig, allNotesInputsOther);
         if (! Arrays.equals(allNotesExpected, c.allNotes()))
             System.out.println(String.format(
                     "allNotes error -- inputs: %s %s | expected: %s | actual: %s",
@@ -307,10 +304,10 @@ public class Chord {
 
         // testing getChordDegree
 
-        if (c.getChordDegree(Note.NoteName.F_SHARP) != ChordDegree.NINTH)
+        if (c.getChordDegree(NoteName.F_SHARP) != ChordDegree.NINTH)
             System.out.println(String.format(
                     "getChordDegree error -- inputs: %s | expected: %s | actual: %s",
-                    Note.NoteName.F_SHARP, ChordDegree.NINTH, c.getChordDegree(Note.NoteName.F_SHARP)
+                    NoteName.F_SHARP, ChordDegree.NINTH, c.getChordDegree(NoteName.F_SHARP)
             ));
 
         // testing getNoteAtInterval
@@ -329,19 +326,19 @@ public class Chord {
                 ChordDegree.FLAT_SEVENTH,
                 ChordDegree.SEVENTH
         };
-        Note.NoteName[] getNoteAtIntervalExpected = {
-                Note.NoteName.E,
-                Note.NoteName.F,
-                Note.NoteName.F_SHARP,
-                Note.NoteName.G,
-                Note.NoteName.G_SHARP,
-                Note.NoteName.A,
-                Note.NoteName.A_SHARP,
-                Note.NoteName.B,
-                Note.NoteName.C,
-                Note.NoteName.C_SHARP,
-                Note.NoteName.D,
-                Note.NoteName.D_SHARP,
+        NoteName[] getNoteAtIntervalExpected = {
+                NoteName.E,
+                NoteName.F,
+                NoteName.F_SHARP,
+                NoteName.G,
+                NoteName.G_SHARP,
+                NoteName.A,
+                NoteName.A_SHARP,
+                NoteName.B,
+                NoteName.C,
+                NoteName.C_SHARP,
+                NoteName.D,
+                NoteName.D_SHARP,
         };
 
         for (int i = 0; i < getNoteAtIntervalExpected.length; i++)
