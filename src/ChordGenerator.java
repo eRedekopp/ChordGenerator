@@ -25,7 +25,17 @@ public class ChordGenerator {
                 guitar
         );
 
-        System.out.println(voicing.toString());
+//        System.out.println(voicing.toString());
+
+        Chord chord = new Chord(Note.NoteName.E, bigNotes, otherNotes);
+
+        ChordVoicing[] allEMajorChords = guitar.findChords(chord);
+
+        System.out.println(allEMajorChords.length);
+
+        for (ChordVoicing v : allEMajorChords) {
+            System.out.println(v.toString());
+        }
 
     }
 

@@ -2,6 +2,7 @@ package Guitar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * A class that contains information the setup of a particular guitar, and utilities for finding chords on it
@@ -76,7 +77,12 @@ public class Guitar {
     public ChordVoicing[] findChords(Chord chord) {
 
         ChordBuilder chBuilder = new ChordBuilder(this, chord);
-        return chBuilder.allChords();
+        List<ChordVoicing> allChords = chBuilder.allChords();
+        ChordVoicing[] outArray = new ChordVoicing[allChords.size()];   // can't just cast the list to an array
+        for (int i = 0; i < allChords.size(); i++) {                    // because javac throws classCastException
+            outArray[i] = allChords.get(i);
+        }
+        return outArray;
     }
 
     /**
@@ -222,7 +228,7 @@ public class Guitar {
         /**
          * @return All valid combinations of chords from notesByString
          */
-        public ChordVoicing[] allChords() {
+        public List<ChordVoicing> allChords() {
             final int[] zeros = new int[indices.length]; // zero'd out array for comparison later
             ArrayList<ChordVoicing> outList = new ArrayList<>();
 
@@ -241,7 +247,7 @@ public class Guitar {
                 incrementIndices();
             } while (!Arrays.equals(this.indices, zeros)); // repeat until indices roll over
 
-            return (ChordVoicing[]) outList.toArray();
+            return outList;
         }
 
         /**
