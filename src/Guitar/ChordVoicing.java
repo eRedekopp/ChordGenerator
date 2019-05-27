@@ -43,7 +43,8 @@ public class ChordVoicing extends Chord {
         }
         ArrayList<Integer> frets = new ArrayList<>();
         for (Note note : voicing) if (note != null && note.fret != 0) frets.add(note.fret);
-        if (Collections.max(frets) - Collections.min(frets) + 1 > this.guitar.getMaxFretSpan()) return false;
+        if (frets.size() != 0
+            && Collections.max(frets) - Collections.min(frets) + 1 > this.guitar.getMaxFretSpan()) return false;
         for (Note.NoteName noteName : this.bigNotes) if (!noteNames.contains(noteName)) return false;
         for (Note.NoteName noteName : noteNames) if (!allChordNotes.contains(noteName)) return false;
         return true;

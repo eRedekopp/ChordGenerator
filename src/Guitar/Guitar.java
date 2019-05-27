@@ -229,6 +229,8 @@ public class Guitar {
          * @return All valid combinations of chords from notesByString
          */
         public List<ChordVoicing> allChords() {
+            // brute force: just check every possible combination
+            // todo: test the fuck out of this 
             final int[] zeros = new int[indices.length]; // zero'd out array for comparison later
             ArrayList<ChordVoicing> outList = new ArrayList<>();
 
@@ -255,7 +257,7 @@ public class Guitar {
          */
         private void incrementIndices() {
             try {
-                for (int i = this.indices.length; i >= 0; i--) { 
+                for (int i = this.indices.length-1; i >= 0; i--) {
                     this.indices[i]++;
                     if (this.indices[i] > this.maxIndices[i]) { // indices[i] == maxIndices[i] represents a muted string
                         this.indices[i - 1]++;                  // (gets set to null in allChords)
