@@ -1,11 +1,25 @@
-import Guitar.*;
 
-public interface Controller {
+public class Controller {
 
-    public void displayChord(Chord chord);
+    private Model model;
 
-    public int getMenuChoice();
+    boolean running;
 
-    public void start();
+    public void setModel(Model model) {
+        this.model = model;
+    }
+
+    public void start() {
+        this.running = true;
+
+        while (this.running) {
+            model.setMode(Mode.GET);
+            model.setMode(Mode.DISPLAY);
+        }
+    }
+
+    public void quit() {
+        System.exit(0);
+    }
 
 }

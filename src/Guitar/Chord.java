@@ -71,8 +71,13 @@ public class Chord {
         ArrayList<NoteName> bigNotesList = new ArrayList<>(), otherNotesList = new ArrayList<>();
         for (ChordDegree degree : bigDegreesList)   bigNotesList.add(getNoteAtChordDegree(degree));
         for (ChordDegree degree : otherDegreesList) otherNotesList.add(getNoteAtChordDegree(degree));
-        this.bigNotes   = (NoteName[]) otherNotesList.toArray();
-        this.otherNotes = (NoteName[]) bigNotesList.toArray();
+//        this.bigNotes   = (NoteName[]) otherNotesList.toArray();
+//        this.otherNotes = (NoteName[]) bigNotesList.toArray();
+        this.bigNotes = new NoteName[bigNotesList.size()];
+        this.otherNotes = new NoteName[otherNotesList.size()];
+        // have to populate them this way to avoid classcastexception
+        for (int i = 0; i < otherNotesList.size(); i++) this.otherNotes[i] = otherNotesList.get(i);
+        for (int i = 0; i < bigNotesList.size(); i++) this.bigNotes[i] = bigNotesList.get(i);
     }
 
     /**
