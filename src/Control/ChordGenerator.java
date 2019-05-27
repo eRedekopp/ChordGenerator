@@ -1,3 +1,5 @@
+package Control;
+
 public class ChordGenerator {
 
 
@@ -5,9 +7,9 @@ public class ChordGenerator {
 
 
     public static void main(String[] args) {
-////        Model model = new Model();
-////        CommandLineView view = new CommandLineView();
-////        Controller controller = new Controller();
+////        Control.Model model = new Control.Model();
+////        Control.CommandLineView view = new Control.CommandLineView();
+////        Control.Controller controller = new Control.Controller();
 //
 //        Guitar guitar = new Guitar();
 //

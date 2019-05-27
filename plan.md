@@ -1,7 +1,7 @@
 
 # About
 
-ChordGenerator is an application that generates a list of all possible voicings of a given
+Control.ChordGenerator is an application that generates a list of all possible voicings of a given
 guitar chord. 
 
 # Structure

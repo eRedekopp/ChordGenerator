@@ -1,3 +1,5 @@
+package Control;
+
 import Guitar.*;
 
 import java.util.ArrayList;
