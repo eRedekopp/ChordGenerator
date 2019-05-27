@@ -11,19 +11,63 @@ public class CommandLineView implements ModelListener {
 
     private Model model;
 
+    private Controller controller;
+
     public void modelChanged() {
         switch (model.getMode()) {
-            case GET:
+            case GET_CHORD:
                 model.setVoicings(this.getChordFromUser());
+                this.displayChordVoicings(model.getVoicings());
+                break;
+            case GET_MODE:
+                model.setMode(this.getModeFromUser());
+                break;
+            case SETTINGS:
+                this.settingsMenu();
                 break;
             case DISPLAY:
                 this.displayChordVoicings(model.getVoicings());
                 break;
+            case EXIT:
+                controller.quit();
         }
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
     public void setModel(Model model) {
         this.model = model;
+    }
+
+    public Mode getModeFromUser() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(
+                "### Main Menu ###\n" +
+                "1) Find Chords\n" +
+                "2) Change Settings\n" +
+                "3) Exit"
+        );
+        String input = null;
+        int inptInt;
+        while (input == null) {
+            input = scanner.nextLine();
+            try {
+                inptInt = Integer.parseInt(input);
+            } catch (RuntimeException e) {
+                System.out.println("Unable to parse input");
+                input = null;
+                continue;
+            }
+            switch (inptInt) {
+                case 1: return Mode.GET_CHORD;
+                case 2: return Mode.SETTINGS;
+                case 3: return Mode.EXIT;
+                default: input = null;
+            }
+        }
+        throw new RuntimeException("Unknown error");
     }
 
     private Chord getChordFromUser() {
@@ -116,6 +160,10 @@ public class CommandLineView implements ModelListener {
             }
         }
         return new Chord(root, chordQuality);
+    }
+
+    private void settingsMenu() {
+        System.out.println("Not Yet Implemented");
     }
 
     private void displayChordVoicings(ChordVoicing[] voicings) {

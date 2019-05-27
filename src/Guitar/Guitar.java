@@ -188,7 +188,7 @@ public class Guitar {
 
 
     /**
-     * A utility class to generate combinations of 2d lists of unknown size for generating chords
+     * A utility class for generating chords
      */
     private class ChordBuilder {
 

@@ -42,6 +42,7 @@ public class ChordGenerator {
 
         model.addSubscriber(view);
         view.setModel(model);
+        view.setController(controller);
         controller.setModel(model);
         controller.start();
     }

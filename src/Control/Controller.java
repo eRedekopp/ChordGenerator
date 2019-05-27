@@ -14,13 +14,12 @@ public class Controller {
         this.running = true;
 
         while (this.running) {
-            model.setMode(Mode.GET);
-            model.setMode(Mode.DISPLAY);
+            model.setMode(Mode.GET_MODE);
         }
     }
 
     public void quit() {
-        System.exit(0);
+        this.running = false;
     }
 
 }
