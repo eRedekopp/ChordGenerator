@@ -75,7 +75,7 @@ public class ChordVoicing extends Chord {
     }
 
     public String toString() {
-        // todo: displays chord chart sideways and chord degrees are incorrect
+        // todo: displays chord chart sideways
         int[] frets = this.getVoicingTab();
         int minFret = min(frets), maxFret = max(frets), minFretDisplayed = minFret - 2, maxFretDisplayed = maxFret + 2;
         // use a stringbuilder for each line of output
@@ -105,7 +105,6 @@ public class ChordVoicing extends Chord {
             if (frets[string] != -1) {
                 builder.append(this.getChordDegree(this.guitar.calcNoteName(
                         this.guitar.calcPitch(string, frets[string]))).toString());
-                System.out.println(this.guitar.calcPitch(string, frets[string]));
             }
             else builder.append('X');
             builder.append('\n');

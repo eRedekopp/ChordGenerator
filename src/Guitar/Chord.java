@@ -1,6 +1,5 @@
 package Guitar;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -103,7 +102,9 @@ public class Chord {
     public static ChordDegree getInterval(Note.NoteName note1, Note.NoteName note2) {
         int pitch1 = utilGuitar.findLowestPitch(note1);
         int pitch2 = utilGuitar.findLowestPitch(note2);
-        int pitchDiff = Math.abs(pitch1 - pitch2);
+        int pitchDiff = pitch2 - pitch1;
+        while (pitchDiff < 0)  pitchDiff += 12;
+        while (pitchDiff > 11) pitchDiff -= 12;
 
         switch (pitchDiff) {
             case 0:
@@ -141,8 +142,6 @@ public class Chord {
         Note.NoteName[] allNotes = new Note.NoteName[arrLength];
         System.arraycopy(bigNotes, 0, allNotes, 0, bigNotes.length);
         System.arraycopy(otherNotes, 0, allNotes, bigNotes.length, otherNotes.length);
-        System.out.println("Debug message: bigNotes = " + bigNotes + " otherNotes = " + otherNotes +
-                           " allNotes = " + allNotes);
         return allNotes;
     }
 
@@ -206,6 +205,13 @@ public class Chord {
         return getNoteAtInterval(this.root, degree);
     }
 
+    /**
+     * Return the name of an interval given the distance in semitones from the first note to the second note going
+     * upward only (eg. major 7th is 11 and not 1)
+     *
+     * @param pitchDiff The distance in semitones from the first note to the second note going upward only
+     * @return The name of the interval corresponding to the pitch difference
+     */
     public static ChordDegree getIntervalFromPitchDiff(int pitchDiff) {
         switch (pitchDiff % 12) {
             case 0: return ChordDegree.ROOT;
@@ -222,5 +228,130 @@ public class Chord {
             case 11: return ChordDegree.SEVENTH;
             default: throw new RuntimeException("Error: found pitch difference: " + pitchDiff % 12);
         }
+    }
+
+    public static int getPitchDiffFromInterval(ChordDegree interval) {
+        switch (interval) {
+            case ROOT:          return 0;
+            case FLAT_NINTH:    return 1;
+            case NINTH:         return 2;
+            case FLAT_THIRD:    return 3;
+            case THIRD:         return 4;
+            case ELEVENTH:      return 5;
+            case FLAT_FIFTH:    return 6;
+            case FIFTH:         return 7;
+            case SHARP_FIFTH:   return 8;
+            case THIRTEENTH:    return 9;
+            case FLAT_SEVENTH:  return 10;
+            case SEVENTH:       return 11;
+            default: throw new RuntimeException("There should be no possible way for this to happen but I still need " +
+                                                "to include a default case for some reason");
+        }
+    }
+
+    public static void main(String[] args) {
+
+        // testing getInterval
+
+        Note.NoteName[] getIntervalInputs = {
+                Note.NoteName.A, Note.NoteName.A,               // Unison
+                Note.NoteName.C, Note.NoteName.C_SHARP,         // min2
+                Note.NoteName.F_SHARP, Note.NoteName.G_SHARP,   // maj2
+                Note.NoteName.A_SHARP, Note.NoteName.C_SHARP,   // min3
+                Note.NoteName.E, Note.NoteName.G_SHARP,         // maj3
+                Note.NoteName.D, Note.NoteName.G,               // per4
+                Note.NoteName.B, Note.NoteName.F,               // TT
+                Note.NoteName.D_SHARP, Note.NoteName.A_SHARP,   // per5
+                Note.NoteName.G_SHARP, Note.NoteName.E,         // min6
+                Note.NoteName.A, Note.NoteName.F_SHARP,         // maj6
+                Note.NoteName.F, Note.NoteName.D_SHARP,         // min7
+                Note.NoteName.F_SHARP, Note.NoteName.F          // maj7
+        };
+        ChordDegree[] getIntervalExpected = {
+                ChordDegree.ROOT,
+                ChordDegree.FLAT_NINTH,
+                ChordDegree.NINTH,
+                ChordDegree.FLAT_THIRD,
+                ChordDegree.THIRD,
+                ChordDegree.ELEVENTH,
+                ChordDegree.FLAT_FIFTH,
+                ChordDegree.FIFTH,
+                ChordDegree.SHARP_FIFTH,
+                ChordDegree.THIRTEENTH,
+                ChordDegree.FLAT_SEVENTH,
+                ChordDegree.SEVENTH
+        };
+        for (int i = 0; i < getIntervalInputs.length; i+=2) {
+            ChordDegree result = Chord.getInterval(getIntervalInputs[i], getIntervalInputs[i+1]);
+            ChordDegree expected = getIntervalExpected[i/2];
+            if (result != expected) {
+                System.out.println(String.format(
+                   "getInterval error -- inputs: %s %s | expected: %s | actual: %s",
+                    getIntervalInputs[i], getIntervalInputs[i+1], expected, result
+                ));
+            }
+        }
+
+        // testing allNotes
+
+        Note.NoteName[] allNotesInputsBig = {Note.NoteName.E, Note.NoteName.G_SHARP};
+        Note.NoteName[] allNotesInputsOther = {Note.NoteName.B};
+        Note.NoteName[] allNotesExpected = {Note.NoteName.E, Note.NoteName.G_SHARP, Note.NoteName.B};
+        Chord c = new Chord(Note.NoteName.E, allNotesInputsBig, allNotesInputsOther);
+        if (! Arrays.equals(allNotesExpected, c.allNotes()))
+            System.out.println(String.format(
+                    "allNotes error -- inputs: %s %s | expected: %s | actual: %s",
+                    Arrays.toString(allNotesInputsBig), Arrays.toString(allNotesInputsOther),
+                    Arrays.toString(allNotesExpected), Arrays.toString(c.allNotes())
+            ));
+
+        // testing getChordDegree
+
+        if (c.getChordDegree(Note.NoteName.F_SHARP) != ChordDegree.NINTH)
+            System.out.println(String.format(
+                    "getChordDegree error -- inputs: %s | expected: %s | actual: %s",
+                    Note.NoteName.F_SHARP, ChordDegree.NINTH, c.getChordDegree(Note.NoteName.F_SHARP)
+            ));
+
+        // testing getNoteAtInterval
+
+        ChordDegree[] getNoteAtIntervalInput = {
+                ChordDegree.ROOT,
+                ChordDegree.FLAT_NINTH,
+                ChordDegree.NINTH,
+                ChordDegree.FLAT_THIRD,
+                ChordDegree.THIRD,
+                ChordDegree.ELEVENTH,
+                ChordDegree.FLAT_FIFTH,
+                ChordDegree.FIFTH,
+                ChordDegree.SHARP_FIFTH,
+                ChordDegree.THIRTEENTH,
+                ChordDegree.FLAT_SEVENTH,
+                ChordDegree.SEVENTH
+        };
+        Note.NoteName[] getNoteAtIntervalExpected = {
+                Note.NoteName.E,
+                Note.NoteName.F,
+                Note.NoteName.F_SHARP,
+                Note.NoteName.G,
+                Note.NoteName.G_SHARP,
+                Note.NoteName.A,
+                Note.NoteName.A_SHARP,
+                Note.NoteName.B,
+                Note.NoteName.C,
+                Note.NoteName.C_SHARP,
+                Note.NoteName.D,
+                Note.NoteName.D_SHARP,
+        };
+
+        for (int i = 0; i < getNoteAtIntervalExpected.length; i++)
+            if (c.getNoteAtChordDegree(getNoteAtIntervalInput[i]) != getNoteAtIntervalExpected[i])
+                System.out.println(String.format(
+                        "getNoteAtChordDegree error -- root: %s | inputs: %s | expected: %s | actual: %s",
+                        c.getRoot(), getNoteAtIntervalInput[i], getNoteAtIntervalExpected[i],
+                        c.getNoteAtChordDegree(getNoteAtIntervalInput[i])
+                ));
+
+        System.out.println("##### Testing Complete #####");
     }
 }

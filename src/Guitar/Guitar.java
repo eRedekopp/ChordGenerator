@@ -119,7 +119,8 @@ public class Guitar {
      * @return The lowest pitch on the fretboard with the given name, represented as an offset from the lowest note
      */
     public int findLowestPitch(Note.NoteName note) {
-        return this.findLowestFret(note, 0);
+        for (int i = 0; i < 12; i++) if (this.calcNoteName(i) == note) return i;
+        throw new RuntimeException("Unknown error"); // shouldn't happen
     }
 
     public int getMaxFretSpan() {
@@ -134,25 +135,47 @@ public class Guitar {
      * @return The lowest fret number corresponding to the given note on the string
      */
     public int findLowestFret(Note.NoteName note, int string) {
-        int currentFret = 0;
-        Note.NoteName currentNote = this.calcNoteName(this.tuning[string]);
-        while (currentNote != note) {
-            currentFret++;
-            currentNote = this.calcNoteName(this.tuning[string] + currentFret);
-        }
-        if (currentFret > highestPlayableFret) throw new FretOutOfBoundsException();
-        return currentFret;
+
+        Chord.ChordDegree stringIntervalFromLowest = Chord.getIntervalFromPitchDiff(this.tuning[string]);
+        Note.NoteName stringNoteName = Chord.getNoteAtInterval(this.lowestNoteName, stringIntervalFromLowest);
+        Chord.ChordDegree noteInterval = Chord.getInterval(stringNoteName, note);
+
+        return Chord.getPitchDiffFromInterval(noteInterval);
+
+//        int currentFret = 0;
+//        Note.NoteName currentNote = this.calcNoteName(this.tuning[string]);
+//        while (currentNote != note) {
+//            currentFret++;
+//            currentNote = this.calcNoteName(this.tuning[string] + currentFret);
+//        }
+//        if (currentFret > highestPlayableFret) throw new FretOutOfBoundsException();
+//        return currentFret;
     }
 
     /**
-     * Calculate the note name based on a given pitch
+     * Calculate the note name based on a given pitch. Note: only works for tunings where the lowest note is E
      *
      * @param pitch The pitch as an offset from the lowest note
      * @return The name of the note represented by the pitch
      */
     public Note.NoteName calcNoteName(int pitch) {
-        ChordVoicing.ChordDegree interval = Chord.getIntervalFromPitchDiff(pitch);
-        return Chord.getNoteAtInterval(this.lowestNoteName, interval);
+        if (this.lowestNoteName != Note.NoteName.E)
+            throw new RuntimeException("Non-standard tunings not yet supported");
+        switch (pitch % 12) {
+            case 0:  return Note.NoteName.E;
+            case 1:  return Note.NoteName.F;
+            case 2:  return Note.NoteName.F_SHARP;
+            case 3:  return Note.NoteName.G;
+            case 4:  return Note.NoteName.G_SHARP;
+            case 5:  return Note.NoteName.A;
+            case 6:  return Note.NoteName.A_SHARP;
+            case 7:  return Note.NoteName.B;
+            case 8:  return Note.NoteName.C;
+            case 9:  return Note.NoteName.C_SHARP;
+            case 10: return Note.NoteName.D;
+            case 11: return Note.NoteName.D_SHARP;
+            default: throw new RuntimeException("Unknown error"); // to satisfy the compiler
+        }
     }
 
     /**
