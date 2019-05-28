@@ -156,6 +156,8 @@ public class Guitar {
      * @return The name of the note represented by the pitch
      */
     public NoteName calcNoteName(int pitch) {
+
+        // todo: remake this to work with different bottom notes
         if (this.lowestNoteName != NoteName.E)
             throw new RuntimeException("Non-standard tunings not yet supported");
         switch (pitch % 12) {

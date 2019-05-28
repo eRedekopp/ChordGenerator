@@ -37,7 +37,7 @@ public class ChordGenerator {
 //        }
 
         Model model = new Model();
-        CommandLineView view = new CommandLineView();
+        DialogView view = new DialogView();
         Controller controller = new Controller();
 
         model.addSubscriber(view);

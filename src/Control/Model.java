@@ -12,11 +12,22 @@ public class Model {
 
     private ArrayList<ModelListener> listeners;
 
+    private String chordName;
+
     public ChordVoicing[] voicingsToDisplay;
+
+    public String getChordName() {
+        return chordName;
+    }
+
+    public void setChordName(String chordName) {
+        this.chordName = chordName;
+    }
 
     public Model() {
         guitar = new Guitar();
         listeners = new ArrayList<>();
+        chordName = "Unknown Chord";
     }
 
     public ChordVoicing[] getVoicings() {

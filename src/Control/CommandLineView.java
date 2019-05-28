@@ -41,7 +41,7 @@ public class CommandLineView implements ModelListener {
         this.model = model;
     }
 
-    public Mode getModeFromUser() {
+    protected Mode getModeFromUser() {
         Scanner scanner = new Scanner(System.in);
         System.out.println(
                 "### Main Menu ###\n" +
@@ -70,7 +70,7 @@ public class CommandLineView implements ModelListener {
         throw new RuntimeException("Unknown error");
     }
 
-    private Chord getChordFromUser() {
+    protected Chord getChordFromUser() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the root of the chord");
         NoteName root = NoteName.A;
@@ -162,11 +162,11 @@ public class CommandLineView implements ModelListener {
         return new Chord(root, chordQuality);
     }
 
-    private void settingsMenu() {
+    protected void settingsMenu() {
         System.out.println("Not Yet Implemented");
     }
 
-    private void displayChordVoicings(ChordVoicing[] voicings) {
+    protected void displayChordVoicings(ChordVoicing[] voicings) {
         Scanner scanner = new Scanner(System.in);
         for (ChordVoicing v : voicings) {
             System.out.println(v.toString());
@@ -175,7 +175,7 @@ public class CommandLineView implements ModelListener {
         }
     }
 
-    private void displayChordVoicing(ChordVoicing chordVoicing) {
+    protected void displayChordVoicing(ChordVoicing chordVoicing) {
         System.out.println(chordVoicing.toString());
     }
 }
