@@ -3,6 +3,8 @@ package Control;
 import javax.swing.*;
 
 import Guitar.*;
+import SwingElements.ChordChart;
+import SwingElements.ChordChartDialog;
 
 public class DialogView implements ModelListener {
 
@@ -149,6 +151,7 @@ public class DialogView implements ModelListener {
                     JOptionPane.OK_CANCEL_OPTION,
                     JOptionPane.PLAIN_MESSAGE,
                     null);
+//            int selection = ChordChartDialog.showDialog(new ChordChart(v));
             if (selection == JOptionPane.CANCEL_OPTION) displaying = false;
         }
     }

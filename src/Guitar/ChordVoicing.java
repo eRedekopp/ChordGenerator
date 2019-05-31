@@ -50,6 +50,14 @@ public class ChordVoicing extends Chord {
         return true;
     }
 
+    public int getMinFret() {
+        return minGtZero(this.getVoicingTab());
+    }
+
+    public int getMaxFret() {
+        return max(this.getVoicingTab());
+    }
+
     /**
      * @return The fret number for each string in this chord voicing, or -1 if string not played
      */
@@ -60,6 +68,10 @@ public class ChordVoicing extends Chord {
             else outArray[i] = -1;
         }
         return outArray;
+    }
+
+    public int getGuitarMaxFretSpan() {
+        return guitar.getMaxFretSpan();
     }
 
     private boolean equals(ChordVoicing o) {
@@ -76,7 +88,6 @@ public class ChordVoicing extends Chord {
     }
 
     public String toString() {
-        // todo: displays chord chart sideways
         int[] frets = this.getVoicingTab();
         int minFret = min(frets), maxFret = max(frets), minFretDisplayed = minFret - 2, maxFretDisplayed = maxFret + 2;
         // use a stringbuilder for each line of output
@@ -133,6 +144,13 @@ public class ChordVoicing extends Chord {
         if (arr.length == 0) throw new IllegalArgumentException("Cannot find smallest item in empty array");
         int smallest = Integer.MAX_VALUE;
         for (int i : arr) if (i < smallest && i != -1) smallest = i;
+        return smallest;
+    }
+
+    private static int minGtZero(int[] arr) {
+        if (arr.length == 0) throw new IllegalArgumentException("Cannot find smallest item in empty array");
+        int smallest = Integer.MAX_VALUE;
+        for (int i : arr) if (i < smallest && i > 0) smallest = i;
         return smallest;
     }
 
