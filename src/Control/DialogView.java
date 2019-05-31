@@ -144,14 +144,14 @@ public class DialogView implements ModelListener {
         boolean displaying = true;
         for (ChordVoicing v : model.getVoicings()) {
             if (!displaying) break;
-            int selection = JOptionPane.showConfirmDialog(
-                    null,
-                    v.toString(),
-                    model.getChordName(),
-                    JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.PLAIN_MESSAGE,
-                    null);
-//            int selection = ChordChartDialog.showDialog(new ChordChart(v));
+//            int selection = JOptionPane.showConfirmDialog(
+//                    null,
+//                    v.toString(),
+//                    model.getChordName(),
+//                    JOptionPane.OK_CANCEL_OPTION,
+//                    JOptionPane.PLAIN_MESSAGE,
+//                    null);
+            int selection = ChordChartDialog.showDialog(new ChordChart(v));
             if (selection == JOptionPane.CANCEL_OPTION) displaying = false;
         }
     }

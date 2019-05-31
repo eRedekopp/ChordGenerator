@@ -17,6 +17,18 @@ public class ChordVoicing extends Chord {
      */
     private Guitar guitar;
 
+    /**
+     * Utility for testing: regular ol E open voicing
+     */
+    public static final ChordVoicing E_COWBOY = new ChordVoicing(
+                NoteName.E,
+                new NoteName[]{NoteName.E, NoteName.G_SHARP},
+                new NoteName[]{NoteName.B},
+                new Note[]{ new Note(0, 0, utilGuitar), new Note(1, 2, utilGuitar), new Note(2, 2, utilGuitar),
+                            new Note(3, 1, utilGuitar), new Note(4, 0, utilGuitar), new Note(5, 0, utilGuitar)},
+                utilGuitar
+        );
+
     public ChordVoicing(String type, NoteName root, Note[] voicing, Guitar guitar) {
         super(root, type);
         this.voicing = voicing;

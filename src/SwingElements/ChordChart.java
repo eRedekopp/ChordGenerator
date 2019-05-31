@@ -2,7 +2,6 @@ package SwingElements;
 
 import Guitar.*;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class ChordChart extends Canvas {
@@ -13,6 +12,7 @@ public class ChordChart extends Canvas {
 
     public ChordChart(ChordVoicing chord) {
         this.chord = chord;
+        this.setSize(WIDTH, HEIGHT);
     }
 
     @Override

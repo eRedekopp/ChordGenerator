@@ -28,7 +28,7 @@ public class Chord {
     /**
      * For performing note calculations
      */
-    private static final Guitar utilGuitar = new Guitar();
+    protected static final Guitar utilGuitar = new Guitar();
 
     public NoteName[] getBigNotes() {
         return bigNotes;
