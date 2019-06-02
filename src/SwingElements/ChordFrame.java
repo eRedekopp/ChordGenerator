@@ -4,29 +4,33 @@ import Guitar.ChordVoicing;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ChordFrame extends JFrame {
 
-    private int result;
-    public static int RESULT_NULL = -1, RESULT_CONTINUE = 0, RESULT_CANCEL = 1;
-
     private Button nextButton, prevButton, cancelButton;
 
-    private JPanel rootPanel;
+    public ChordFrame() {
+        super("Chord Display");
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.nextButton = new Button("Next");
+        this.cancelButton = new Button("Cancel");
+        this.prevButton = new Button("Previous");
+    }
 
     public ChordFrame(ChordChart chart) {
         super("Chord Display");
 
-        this.result = RESULT_NULL;
-        this.setSize(500, 500);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setSize(chart.getWidth() + 100, chart.getHeight() + 100);
         this.nextButton = new Button("Next");
         this.cancelButton = new Button("Cancel");
         this.prevButton = new Button("Previous");
 
+        this.displayChart(chart);
+    }
+
+    public void displayChart(ChordChart chart) {
         JPanel rootPanel = new JPanel();
         rootPanel.setLayout(new BoxLayout(rootPanel, BoxLayout.Y_AXIS));
 
@@ -36,23 +40,24 @@ public class ChordFrame extends JFrame {
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout());
-        buttonPanel.add(cancelButton);
-        buttonPanel.add(prevButton);
-        buttonPanel.add(nextButton);
+        buttonPanel.add(this.cancelButton);
+        buttonPanel.add(this.prevButton);
+        buttonPanel.add(this.nextButton);
 
         rootPanel.add(chart);
         rootPanel.add(buttonPanel);
 
+        this.getContentPane().removeAll();
+        this.repaint();
         this.add(rootPanel);
     }
 
-    public void displayChart() {
-
-
+    public void setNextEnabled(boolean b) {
+        this.nextButton.setEnabled(b);
     }
 
-    public int getResult() {
-        return this.result;
+    public void setPrevEnabled(boolean b) {
+        this.prevButton.setEnabled(b);
     }
 
     public void setCancelListener(ActionListener listener) {

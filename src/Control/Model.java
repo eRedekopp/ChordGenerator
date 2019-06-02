@@ -14,7 +14,34 @@ public class Model {
 
     private String chordName;
 
-    public ChordVoicing[] voicingsToDisplay;
+    private ChordVoicing[] voicingsToDisplay;
+
+    private int displayedChordIndex = 0;
+
+    public void goNextChord() {
+        this.displayedChordIndex += 1;
+        if (this.displayedChordIndex >= voicingsToDisplay.length)
+            this.displayedChordIndex = voicingsToDisplay.length - 1;
+        this.notifySubscribers();
+    }
+
+    public void goPrevChord() {
+        this.displayedChordIndex -= 1;
+        if (this.displayedChordIndex < 0) this.displayedChordIndex = 0;
+        this.notifySubscribers();
+    }
+
+    public ChordVoicing getCurrentChord() {
+        return this.voicingsToDisplay[this.displayedChordIndex];
+    }
+
+    public boolean cursorAtFirstChord() {
+        return displayedChordIndex == 0;
+    }
+
+    public boolean cursorAtLastChord() {
+        return displayedChordIndex == voicingsToDisplay.length - 1;
+    }
 
     public String getChordName() {
         return chordName;
