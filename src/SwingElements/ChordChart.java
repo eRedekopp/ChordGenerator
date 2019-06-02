@@ -13,6 +13,7 @@ public class ChordChart extends Canvas {
     public ChordChart(ChordVoicing chord) {
         this.chord = chord;
         this.setSize(WIDTH, HEIGHT);
+        this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
     }
 
     @Override
