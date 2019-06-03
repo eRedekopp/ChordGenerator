@@ -1,27 +1,120 @@
 package SwingElements;
 
+import Control.ModelListener;
+
 import javax.swing.*;
+
 
 public class ChordConfigFrame {
     private JPanel panel1;
-    private JComboBox comboBox3;
-    private JComboBox comboBox4;
-    private JTextField textField1;
-    private JComboBox comboBox5;
-    private JComboBox comboBox6;
-    private JTextField textField2;
-    private JComboBox comboBox7;
-    private JComboBox comboBox8;
-    private JTextField textField3;
-    private JComboBox comboBox9;
-    private JComboBox comboBox10;
-    private JComboBox comboBox11;
-    private JButton enterButton;
+    private JComboBox reqNoteAddBox;
+    private JComboBox reqNoteRemBox;
+    private JTextField reqNotesTextArea;
+    private JComboBox otherNotesAddBox;
+    private JComboBox otherNotesRemBox;
+    private JTextField otherNotesTextArea;
+    private JComboBox reqStringNoteBox;
+    private JComboBox reqStringRemBox;
+    private JTextField reqStringTextArea;
+    private JComboBox reqStringStringBox;
+    private JComboBox chordQuickNoteBox;
+    private JComboBox chordQuickQualityBox;
+    private JButton chordQuickEnterButton;
     private JButton helpButton;
-    private JComboBox comboBox1;
-    private JButton enterButton1;
+    private JComboBox guitarQuickBox;
+    private JButton guitarQuickButton;
     private JCheckBox allowDuplicateNotesCheckBox;
-    private JComboBox comboBox2;
-    private JTextField textField4;
+    private JComboBox guitarTuningBox;
+    private JTextField guitarTuningTextArea;
     private JButton findChordsButton;
+    private JSpinner topFretSpinner;
+    private JSpinner maxSpanSpinner;
+
+    public JSpinner getTopFretSpinner() {
+        return topFretSpinner;
+    }
+
+    public JSpinner getMaxSpanSpinner() {
+        return maxSpanSpinner;
+    }
+
+    public JComboBox getReqNoteAddBox() {
+        return reqNoteAddBox;
+    }
+
+    public JComboBox getReqNoteRemBox() {
+        return reqNoteRemBox;
+    }
+
+    public JTextField getReqNotesTextArea() {
+        return reqNotesTextArea;
+    }
+
+    public JComboBox getOtherNotesAddBox() {
+        return otherNotesAddBox;
+    }
+
+    public JComboBox getOtherNotesRemBox() {
+        return otherNotesRemBox;
+    }
+
+    public JTextField getOtherNotesTextArea() {
+        return otherNotesTextArea;
+    }
+
+    public JComboBox getReqStringNoteBox() {
+        return reqStringNoteBox;
+    }
+
+    public JComboBox getReqStringRemBox() {
+        return reqStringRemBox;
+    }
+
+    public JTextField getReqStringTextArea() {
+        return reqStringTextArea;
+    }
+
+    public JComboBox getReqStringStringBox() {
+        return reqStringStringBox;
+    }
+
+    public JComboBox getChordQuickNoteBox() {
+        return chordQuickNoteBox;
+    }
+
+    public JComboBox getChordQuickQualityBox() {
+        return chordQuickQualityBox;
+    }
+
+    public JButton getChordQuickEnterButton() {
+        return chordQuickEnterButton;
+    }
+
+    public JButton getHelpButton() {
+        return helpButton;
+    }
+
+    public JComboBox getGuitarQuickBox() {
+        return guitarQuickBox;
+    }
+
+    public JButton getGuitarQuickButton() {
+        return guitarQuickButton;
+    }
+
+    public JCheckBox getAllowDuplicateNotesCheckBox() {
+        return allowDuplicateNotesCheckBox;
+    }
+
+    public JComboBox getGuitarTuningBox() {
+        return guitarTuningBox;
+    }
+
+    public JTextField getGuitarTuningTextArea() {
+        return guitarTuningTextArea;
+    }
+
+    public JButton getFindChordsButton() {
+        return findChordsButton;
+    }
 }
