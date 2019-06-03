@@ -29,6 +29,11 @@ public class ChordConfigFrame {
     private JButton findChordsButton;
     private JSpinner topFretSpinner;
     private JSpinner maxSpanSpinner;
+    private JButton clearButton;
+
+    public JButton getClearButton() {
+        return clearButton;
+    }
 
     public JSpinner getTopFretSpinner() {
         return topFretSpinner;
