@@ -8,7 +8,13 @@ public class ChordSelectView implements ModelListener {
 
     private ChordConfigFrame configFrame;
 
+    private Model model;
+
     private ChordSelectInteractionModel iModel;
+
+    public void setModel(Model model) {
+        this.model = model;
+    }
 
     public ChordSelectView() {
         configFrame.getGuitarTuningTextArea().setEnabled(false);
