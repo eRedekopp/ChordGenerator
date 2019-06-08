@@ -1,45 +1,54 @@
 package Control;
 
+import SwingElements.ChordConfigFrame;
+import SwingElements.ChordFrame;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Main config and setup for MVC
+ */
 public class ChordGenerator {
 
+    // mvc elements
+    private ChordSelectController selectController;
+    private ChordSelectView selectView;
+    private ChordSelectInteractionModel selectInteractionModel;
+    private ChordDisplayView displayView;
+    private ChordDisplayController displayController;
+    private Model model;
+
+
+    @SuppressWarnings("unchecked")
     public ChordGenerator() {
 
+        // todo finish chordselect setup
+
         // construct MVC elements
-        Controller controller = new Controller();
-        ChordSelectView view = new ChordSelectView();
-        Model model = new Model();
-        ChordDisplayController chordDisplayController = new ChordDisplayController();
-        ChordDisplayView chordDisplayView = new ChordDisplayView();
+        this.selectView = new ChordSelectView();
+        this.selectController = new ChordSelectController();
+        this.selectView = new ChordSelectView();
+        this.model = new Model();
+        this.displayController = new ChordDisplayController();
+        this.displayView = new ChordDisplayView();
+        this.selectInteractionModel = new ChordSelectInteractionModel();
 
         // add relations
-        controller.setModel(model);
-        view.setModel(model);
-        chordDisplayController.setModel(model);
-        model.addSubscriber(view);
-        model.addSubscriber(chordDisplayView);
+        this.selectController.setiModel(selectInteractionModel);
+        this.selectView.setModel(model);
+        this.displayController.setModel(model);
+        this.model.addSubscriber(selectView);
+        this.model.addSubscriber(displayView);
 
-        // add listeners to chordFrame
-        chordDisplayView.chordFrame.setCancelListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                chordDisplayController.handleCancelClick();
-            }
-        });
-        chordDisplayView.chordFrame.setPrevListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                chordDisplayController.handlePrevClick();
-            }
-        });
-        chordDisplayView.chordFrame.setNextListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                chordDisplayController.handleNextClick();
-            }
-        });
+
+
+
+
+    }
+
+    private void selectViewInitialSetup() {
 
 
     }

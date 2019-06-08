@@ -48,7 +48,7 @@ public class Chord {
         this.root = root;
         ArrayList<ChordDegree> otherDegreesList = new ArrayList<>(), bigDegreesList = new ArrayList<>();
 
-        switch (type) {
+        switch (type.toLowerCase()) {
             case "major triad":
                 bigDegreesList.addAll(Arrays.asList(ChordDegree.ROOT, ChordDegree.THIRD));
                 otherDegreesList.add(ChordDegree.FIFTH);
