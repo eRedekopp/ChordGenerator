@@ -71,6 +71,7 @@ public class ChordSelectView implements ModelListener {
 
     @SuppressWarnings("unchecked")
     public void modelChanged() {
+        // update all dynamic combo boxes, text areas, and spinners
         this.configFrame.getReqNoteAddBox().setModel(
                 new DefaultComboBoxModel(this.iModel.getReqNoteAddBoxValues().toArray()));
         this.configFrame.getReqNoteRemBox().setModel(
@@ -93,8 +94,10 @@ public class ChordSelectView implements ModelListener {
                 this.iModel.duplicatesAllowed());
         this.configFrame.getGuitarTuningTextArea().setText(
                 this.iModel.getGuitarTuningTextAreaValue());
-        this.configFrame.getTopFretSpinner().setValue(this.iModel.getTopFretSpinnerValue());
-        this.configFrame.getMaxSpanSpinner().setValue(this.iModel.getMaxSpanSpinnerValue());
+        this.configFrame.getTopFretSpinner().setValue(
+                this.iModel.getTopFretSpinnerValue());
+        this.configFrame.getMaxSpanSpinner().setValue(
+                this.iModel.getMaxSpanSpinnerValue());
     }
 
     public void displayDialogMessage(String message, String title) {
